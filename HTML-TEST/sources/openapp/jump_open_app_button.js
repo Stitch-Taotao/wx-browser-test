@@ -108,9 +108,10 @@
     const isWechat = /micromessenger/i.test(userAgent);
     currentAppEnv = isWechat ? MTApplication.WX : MTApplication.Other;
     const isQQ = /qq/i.test(userAgent);
-    if (currentAppEnv === MTApplication.Other && isQQ) {
+    if (currentAppEnv == MTApplication.Other && isQQ) {
         currentAppEnv = MTApplication.QQ;
     }
+    console.log(`当前系统:${currentPlatform.toString()}环境:${currentAppEnv.toString()}`);
     checkBtnShow();
 
     if (isWechat) {
@@ -146,6 +147,10 @@
         // 呼起APP，不一定能成功打开跳转
         //alert("触发app呼起！");
         window.location.href = 'keke://open';
+        if (currentAppEnv == MTApplication.QQ) {
+            // window.location.href = 'https%3A%2F%2Fa.app.qq.com%2Fo%2Fsimple.jsp%3Fpkgname%3Dcom.letpub.keke%26android_schema%3Dkeke%3A%2F%2Fopen';
+            window.location.href = 'https://a.app.qq.com/o/simple.jsp?pkgname=com.letpub.keke&android_schema=keke://open&ios_schema=keke://';
+        }
         var jumpToAppInH5_timer
         // 3s之后跳转到APP下载页（未安装app的情况）
         if (jumpToAppInH5_timer) clearTimeout(jumpToAppInH5_timer);
@@ -161,6 +166,10 @@
     // iOS按钮跳转到链接
     function iOSOpenApp() {
         window.location.href = "https://app.letpub.com.cn/app/keke/index/";
+        if (currentAppEnv == MTApplication.QQ) {
+            // window.location.href = 'https%3A%2F%2Fa.app.qq.com%2Fo%2Fsimple.jsp%3Fpkgname%3Dcom.letpub.keke%26android_schema%3Dkeke%3A%2F%2Fopen';
+            window.location.href = 'https://a.app.qq.com/o/simple.jsp?pkgname=com.letpub.keke&android_schema=keke://open&ios_schema=keke://';
+        }
     }
 
     function normalButtonAction() {
