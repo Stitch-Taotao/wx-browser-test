@@ -1,0 +1,17 @@
+{
+  "hosting": {
+    "public": "/",
+    "site":"subletpub",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ]
+  }
+}

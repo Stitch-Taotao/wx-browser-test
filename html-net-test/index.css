@@ -1,0 +1,13 @@
+.card{
+    display: inline-flex;
+    flex-direction: row;
+    border: 1px solid #000;
+    background-color: rgb(174, 121, 224);
+    color: #fff;
+    margin: 2px;
+    width: fit-content;
+}
+
+text{
+    width: fit-content;
+}

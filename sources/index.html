@@ -1,14 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <link rel="icon" href="/favicon.ico">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vite App</title>
-  </head>
-  <body>
-    <div id="app"></div>
-    <script src="http://res.wx.qq.com/open/js/jweixin-1.6.0.js"></script>
-    <script type="module" src="/src/main.js"></script>
-  </body>
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" href="/favicon.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vite App</title>
+</head>
+
+<body>
+  <script src="https://res.wx.qq.com/open/js/jweixin-1.6.0.js"></script>
+  <!-- 引入 js-sha1 库 -->
+  <!-- <script src="https://cdn.jsdelivr.net/npm/js-sha1"></script> -->
+  <script src="https://cdn.bootcdn.net/ajax/libs/js-sha1/0.6.0/sha1.js"></script>
+  <div id="app"></div>
+  <script type="module" src="./src/main.js"></script>
+</body>
+
 </html>

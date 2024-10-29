@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script src="https://res.wx.qq.com/open/js/jweixin-1.6.0.js"></script>
+    <!-- 引入 js-sha1 库 -->
+    <script src="https://cdn.jsdelivr.net/npm/js-sha1"></script>
+    <wx-open-launch-app id="launch-btn" appid="wxe2f29d15a85badb7" extinfo="extinfo">
+        <script type="text/wxtag-template">
+            <style>.btn { padding: 12px }</style>
+            <button class="btn">App内查看</button>
+        </script>
+        <!-- <button class="btn">App内查看</button> -->
+    </wx-open-launch-app>
+    <p id="result"></p>
+    <style>
+        /* .btn {
+            width: 20%;
+            height: 2em;
+            background-color: #a72c2c;
+            border: none;
+            outline: none;
+            font-size: 16px;
+            color: #faf5f5;
+        } */
+    </style>
+    <script>
+        // // 生成当前时间戳
+        // var timestamp = new Date().getTime(); //1712038831142
+
+        // // 转换时间戳为字符串
+        // var timestampString = timestamp.toString();
+
+        // console.log("生成的时间戳为：" + timestampString);
+        async function init() {
+
+            // 生成当前时间戳（以秒为单位）
+            var timestampInSeconds = Math.floor(Date.now() / 1000);
+
+            // 转换时间戳为字符串
+            var timestampString = timestampInSeconds.toString();
+
+            console.log("生成的时间戳为：" + timestampString);
+
+            function createNonceStr(length = 16) {
+                // 获取随机字符串
+                var chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+                var str = "";
+                for (var i = 0; i < length; i++) {
+                    str += chars.charAt(Math.floor(Math.random() * chars.length));
+                }
+                return str;
+            }
+
+            // 示例调用
+            var nonceStr = createNonceStr();
+            console.log("生成的随机字符串为：" + nonceStr);
+
+            // var server_ticket_packet = await fetch("https://www.letpub.com.cn/weixin/get_keke_app_data.php?action=get_jsapi_ticket", {
+            //     method: 'GET',
+            //     mode: "no-cors"
+            // })
+            //     .then(response => response.json());
+            let ticketUrl = "https://letpub.com.cn/weixin/get_keke_app_data.php?action=get_jsapi_ticket";
+
+            // Default options are marked with *
+            const response = await fetch(ticketUrl, {
+                method: "GET", // *GET, POST, PUT, DELETE, etc.
+                // mode: "no-cors", // no-cors, *cors, same-origin
+                cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+                // credentials: "same-origin", // include, *same-origin, omit
+                // headers: {
+                //     "Content-Type": "application/json",
+                //     // 'Content-Type': 'application/x-www-form-urlencoded',
+                // },
+                // redirect: "follow", // manual, *follow, error
+                // referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+                // body: JSON.stringify(data), // body data type must match "Content-Type" header
+            }).then(res => {
+                return res.json();
+            }).catch(err => {
+                console.log("请求ticket失败：" + err);
+            });
+
+
+            // console.log("response.json" + response["jsapi_ticket"]);
+            // console.log("server_ticket_packet" + JSON.stringify(response.json()));
+            let ticket = response["jsapi_ticket"]
+            // let ticket = "sM4AOVdWfPE4DxkXGEs8VMSTVo7Rx3gPA1QdkpjQIXTYm2chgXdWYDHbpKYq13tbHsnMKtD2TtKi7kXk_gCN1Q"
+            let url = location.href.split('#')[0]
+            // let url = "http://mp.weixin.qq.com?params=value";
+
+            // 添加url展示
+            var pEle = document.getElementById("result")
+            pEle.innerHTML = location.href
+
+            // alert(location.href)
+            let step1Str = "jsapi_ticket=" + ticket + "&noncestr=" + nonceStr + "&timestamp=" + timestampString + "&url=" + url;
+            console.log("生成的签名第一步字符串为：" + step1Str);
+            // 计算 SHA-1 哈希值
+            const signature = sha1(step1Str);
+            console.log("生成的签名字符串为：" + signature);
+            wx.config({
+                debug: true, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印
+                appId: 'wxef464937118176ce', // 必填，公众号的唯一标识
+                timestamp: timestampString, // 必填，生成签名的时间戳
+                nonceStr: nonceStr, // 必填，生成签名的随机串
+                signature: signature,// 必填，签名
+                jsApiList: ["onMenuShareAppMessage"], // 必填，需要使用的JS接口列表,没有就随便填一个
+                openTagList: ['wx-open-launch-app'] //必填， 要申请的开放标签名称
+            })
+            wx.ready(function () {
+                // config信息验证后会执行ready方法，所有接口调用都必须在config接口获得结果之后，config是一个客户端的异步操作，所以如果需要在页面加载时就调用相关接口，则须把相关接口放在ready函数中调用来确保正确执行。对于用户触发时才调用的接口，则可以直接调用，不需要放在ready函数中
+                console.log("config 成功");
+            });
+            wx.error(function (res) {
+                // config信息验证失败会执行error函数，如签名过期导致验证失败，具体错误信息可以打开config的debug模式查看，也可以在返回的res参数中查看，对于SPA可以在这里更新签名
+                console.log("config 失败");
+            });
+        }
+        init();
+        // console.log(JSON.stringify({"name":"zhangsan"}.name))
+    </script>
+    <script>
+        function ready() {
+            console.log("ready" + appid + extinfo);
+        }
+        function launch(appid, extinfo) {
+            console.log("launch" + appid + extinfo);
+            alert("launch+appid:" + JSON.stringify(appid) );
+            alert("launch+extinfo:" + extinfo );
+
+        }
+        function error(errMsg, appid, extinfo) {
+            let msg = "appid:" + appid + '\n' + "extinfo:" + extinfo + "\n" + "errMsg-details:" + JSON.stringify(errMsg.detail) + '\n'
+            alert("error:"+msg);
+            console.log(msg);
+        }
+        var btn = document.getElementById('launch-btn');
+        btn.addEventListener('launch', launch);
+        btn.addEventListener('error', error);
+    </script>
+</body>
+
+</html>

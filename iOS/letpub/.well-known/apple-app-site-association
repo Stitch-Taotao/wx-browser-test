@@ -1,0 +1,13 @@
+{
+    "applinks": {
+        "apps": [],
+        "details": [
+            {
+                "appID": "6F2DBN6J4M.com.example.flutterApplication100",
+                "paths": [
+                    "/open/*"
+                ]
+            }
+        ]
+    }
+}
