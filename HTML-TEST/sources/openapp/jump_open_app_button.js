@@ -1,5 +1,6 @@
 // import  "https://cdn.bootcdn.net/ajax/libs/js-sha1/0.6.0/sha1.js"
 // import  "https://res.wx.qq.com/open/js/jweixin-1.6.0.js"
+
 (function () {
     const MTPlatform = {
         iOS: Symbol('iOS'),
@@ -12,6 +13,7 @@
         QQ: Symbol('QQ'),
         Other: Symbol('Other'),
     }
+    const txOpenLink = 'https://a.app.qq.com/o/simple.jsp?pkgname=com.letpub.keke&android_schema=keke://open&ios_schema=keke://'
     // 当前系统平台
     var currentPlatform = null
     // 当前App环境
@@ -131,7 +133,11 @@
         // alert("error:" + msg);
         console.log(msg);
         // 假设点击按钮launch 失败的话，就调用跳转下载页面逻辑
-        androidCanNotUseWxCapability();
+        // androidCanNotUseWxCapability();
+        // window.location.href = `intent://http:www.baidu.com#Intent;scheme=https;package=com.android.browser;end`;
+        // window.location.href = `intent://www.baidu.com#Intent;scheme=https;category=android.intent.category.BROWSABLE;end`;
+        txOpenApp()
+        // openKekeOfficalHome(true)
     }
 
     var wxopenBtn = window.document.getElementById('wxlaunchBtn');
@@ -148,28 +154,41 @@
         //alert("触发app呼起！");
         window.location.href = 'keke://open';
         if (currentAppEnv == MTApplication.QQ) {
-            // window.location.href = 'https%3A%2F%2Fa.app.qq.com%2Fo%2Fsimple.jsp%3Fpkgname%3Dcom.letpub.keke%26android_schema%3Dkeke%3A%2F%2Fopen';
-            window.location.href = 'https://a.app.qq.com/o/simple.jsp?pkgname=com.letpub.keke&android_schema=keke://open&ios_schema=keke://';
+            txOpenApp()
+        } else {
+            openKekeOfficalHome(false)
         }
-        var jumpToAppInH5_timer
-        // 3s之后跳转到APP下载页（未安装app的情况）
-        if (jumpToAppInH5_timer) clearTimeout(jumpToAppInH5_timer);
-        jumpToAppInH5_timer = setTimeout(() => {
+    }
+    function openKekeOfficalHome(immediate) {
+        if (immediate) {
             window.location.href = 'https://www.letpub.com.cn/app/keke/index/';
-        }, 2000);
+        } else {
+            var jumpToAppInH5_timer
+            // 3s之后跳转到APP下载页（未安装app的情况）
+            if (jumpToAppInH5_timer) clearTimeout(jumpToAppInH5_timer);
+            jumpToAppInH5_timer = setTimeout(() => {
+                window.location.href = 'https://www.letpub.com.cn/app/keke/index/';
+            }, 2000);
 
-        // 跳转app之后禁止再跳转中间页
-        document.addEventListener('visibilitychange', () => {
-            clearTimeout(jumpToAppInH5_timer);
-        });
+            // 跳转app之后禁止再跳转中间页
+            document.addEventListener('visibilitychange', () => {
+                clearTimeout(jumpToAppInH5_timer);
+            });
+        }
     }
     // iOS按钮跳转到链接
     function iOSOpenApp() {
-        window.location.href = "https://app.letpub.com.cn/app/keke/index/";
         if (currentAppEnv == MTApplication.QQ) {
-            // window.location.href = 'https%3A%2F%2Fa.app.qq.com%2Fo%2Fsimple.jsp%3Fpkgname%3Dcom.letpub.keke%26android_schema%3Dkeke%3A%2F%2Fopen';
-            window.location.href = 'https://a.app.qq.com/o/simple.jsp?pkgname=com.letpub.keke&android_schema=keke://open&ios_schema=keke://';
+            txOpenApp()
+        } else {
+            window.location.href = "https://app.letpub.com.cn/app/keke/index/";
         }
+    }
+    // tx
+    function txOpenApp() {
+        // window.location.href = 'https%3A%2F%2Fa.app.qq.com%2Fo%2Fsimple.jsp%3Fpkgname%3Dcom.letpub.keke%26android_schema%3Dkeke%3A%2F%2Fopen';
+        window.location.href = txOpenLink;
+        console.log("触发了txOpenApp")
     }
 
     function normalButtonAction() {

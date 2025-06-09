@@ -9,7 +9,8 @@
 
 <body>
     <script src="https://res.wx.qq.com/open/js/jweixin-1.6.0.js"></script>
-    <script src="https://cdn.bootcdn.net/ajax/libs/js-sha1/0.6.0/sha1.js"></script>
+    <!-- <script src="https://cdn.bootcdn.net/ajax/libs/js-sha1/0.6.0/sha1.js"></script> -->
+    <script src="./sha1.js"></script>
     <wx-open-launch-app id="wxlaunchBtn" appid="wxe2f29d15a85badb7" extinfo="extinfo" style="display: none;">
         <script type="text/wxtag-template">
             <button class="btn">打开App</button>
@@ -17,7 +18,9 @@
     </wx-open-launch-app>
     <button id="normalLaunchBtn" class="btn" style="display: none;">打开App</button>
     <p id "p"></p>
+    <button id="testOpenWxH5Btn" class="btn" style="display: block;">测试浏览器打开微信H5</button>
     <script type="module"  src="./jump_open_app_button.js"></script>
+    <script src="./test.js"></script>
 </body>
 
 </html>
